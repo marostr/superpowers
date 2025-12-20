@@ -32,88 +32,8 @@ Use this skill when:
 1. **Message Passing OOP**: Ask objects, don't reach into their internals
 2. **Hotwire/Turbo**: Never write API/JSON code
 3. **RESTful**: Stick to 7 standard actions, one controller per resource
-4. **CRUD Resources for State**: Model state changes as singular resources, not custom actions
-5. **No Exception Control Flow**: Never catch exceptions for control flow - let them propagate
-6. **NEVER use raw SQL strings** - use ActiveRecord query methods or Arel instead
-
-## CRUD Resources for State Changes (Critical)
-
-When an action doesn't map to standard CRUD, introduce a new resource rather than custom actions.
-
-**WRONG** - Custom actions:
-```ruby
-resources :cards do
-  post :close
-  post :reopen
-  post :pin
-  post :unpin
-end
-```
-
-**RIGHT** - Singular resources for state:
-```ruby
-resources :cards do
-  resource :closure    # POST = close, DELETE = reopen
-  resource :pin        # POST = pin, DELETE = unpin
-  resource :goldness   # POST = gild, DELETE = ungild
-end
-```
-
-**Pattern**: `create` enables the state, `destroy` disables it. The controller is thin - it delegates to model methods:
-
-```ruby
-class Cards::ClosuresController < ApplicationController
-  include CardScoped
-
-  def create
-    @card.close
-    respond_to { |format| format.turbo_stream { render_card_replacement } }
-  end
-
-  def destroy
-    @card.reopen
-    respond_to { |format| format.turbo_stream { render_card_replacement } }
-  end
-end
-```
-
-## Scoping Concerns
-
-Bundle `before_action` setup with related helper methods in concerns:
-
-```ruby
-module CardScoped
-  extend ActiveSupport::Concern
-
-  included do
-    before_action :set_card, :set_board
-  end
-
-  private
-    def set_card
-      @card = Current.user.accessible_cards.find_by!(number: params[:card_id])
-    end
-
-    def set_board
-      @board = @card.board
-    end
-
-    def render_card_replacement
-      render turbo_stream: turbo_stream.replace(
-        [@card, :card_container],
-        partial: "cards/container",
-        method: :morph
-      )
-    end
-end
-```
-
-Controllers include the concern and get both setup and helpers:
-```ruby
-class Cards::ClosuresController < ApplicationController
-  include CardScoped  # Provides @card, @board, render_card_replacement
-end
-```
+4. **No Exception Control Flow**: Never catch exceptions for control flow - let them propagate
+5. **NEVER use raw SQL strings** - use ActiveRecord query methods or Arel instead
 
 ## Message Passing (Critical)
 
@@ -158,18 +78,18 @@ Every controller action MUST call `authorize`. This ensures Pundit policies are 
 
 | Do | Don't |
 |----|-------|
-| `resource :closure` | `post :close, :reopen` |
 | `user.bookmarked?(academy)` | `user.bookmarks.exists?(...)` |
+| `academy.bookmark_count` | `academy.bookmarks.count` |
 | Model methods for state | Inline association queries |
-| Scoping concerns | Repeated `before_action` setup |
 | Turbo Streams | JSON responses |
 | 7 RESTful actions | Custom action proliferation |
+| `before_action` for setup | Repeated code in actions |
 
 ## Common Mistakes
 
-1. **Custom actions for state** - Use singular resources (`resource :closure` not `post :close`)
-2. **Missing authorize calls** - Every action MUST call `authorize`
-3. **Repeated before_action setup** - Extract to scoping concerns
-4. **Business logic in controller** - Move to model
-5. **respond_to with json** - Use turbo_stream only
+1. **Missing authorize calls** - Every action MUST call `authorize`
+2. **Checking state in views** - Move to model method
+3. **Business logic in controller** - Move to model
+4. **respond_to with json** - Use turbo_stream only
+5. **Catching exceptions for control flow** - Let exceptions propagate
 6. **Fat actions** - Extract to model methods
