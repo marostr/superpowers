@@ -9,9 +9,46 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 
 Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
 
-Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well. For Rails projects, assume they don't know good Rails conventions.
+Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
+
+## Rails Projects - MANDATORY
+
+```dot
+digraph rails_check {
+    rankdir=LR;
+    check [label="Rails project?", shape=diamond];
+    load [label="Load ALL Rails\nconvention skills", shape=box, style=filled, fillcolor="#ffcccc"];
+    write [label="Write plan\nwith conventions", shape=box, style=filled, fillcolor="#ccffcc"];
+    proceed [label="Write plan", shape=box];
+
+    check -> load [label="yes"];
+    check -> proceed [label="no"];
+    load -> write;
+}
+```
+
+**Before writing ANY task code for a Rails project, you MUST load ALL convention skills:**
+
+```
+superpowers:rails-controller-conventions
+superpowers:rails-model-conventions
+superpowers:rails-view-conventions
+superpowers:rails-policy-conventions
+superpowers:rails-job-conventions
+superpowers:rails-migration-conventions
+superpowers:rails-stimulus-conventions
+superpowers:rails-testing-conventions
+```
+
+Then apply conventions directly in task code (not "follow conventions" - actual code).
+
+| Rationalization | Reality |
+|-----------------|---------|
+| "I already know Rails conventions" | These are PROJECT conventions. Load them. |
+| "I only need controller conventions" | Tasks touch multiple files. Load all. |
+| "Too many skills" | ~2500 words total. 10 seconds to load. |
 
 **Context:** This should be run in a dedicated worktree (created by brainstorming skill).
 
@@ -93,7 +130,6 @@ git commit -m "feat: add specific feature"
 - Exact commands with expected output
 - Reference relevant skills with @ syntax
 - DRY, YAGNI, TDD, frequent commits
-- For Rails projects, load Rails convention skills and apply them to task code
 
 ## Execution Handoff
 

@@ -16,6 +16,19 @@ Task tool (general-purpose):
 
     [Scene-setting: where this fits, dependencies, architectural context]
 
+    ## Required Skills (Rails projects)
+
+    [If Rails project, controller adds this section:]
+    Load ALL Rails convention skills BEFORE implementing:
+    superpowers:rails-controller-conventions
+    superpowers:rails-model-conventions
+    superpowers:rails-view-conventions
+    superpowers:rails-policy-conventions
+    superpowers:rails-job-conventions
+    superpowers:rails-migration-conventions
+    superpowers:rails-stimulus-conventions
+    superpowers:rails-testing-conventions
+
     ## Before You Begin
 
     If you have questions about:

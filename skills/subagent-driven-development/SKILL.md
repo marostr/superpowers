@@ -88,6 +88,28 @@ digraph process {
 - `./spec-reviewer-prompt.md` - Dispatch spec compliance reviewer subagent
 - `./code-quality-reviewer-prompt.md` - Dispatch code quality reviewer subagent
 
+## Rails Projects - MANDATORY
+
+**For Rails projects, include this in EVERY implementer prompt:**
+
+```
+Load ALL Rails convention skills before implementing:
+superpowers:rails-controller-conventions
+superpowers:rails-model-conventions
+superpowers:rails-view-conventions
+superpowers:rails-policy-conventions
+superpowers:rails-job-conventions
+superpowers:rails-migration-conventions
+superpowers:rails-stimulus-conventions
+superpowers:rails-testing-conventions
+```
+
+| Rationalization | Reality |
+|-----------------|---------|
+| "Subagent knows Rails" | Project conventions differ. Load skills. |
+| "Only touching one file type" | Tasks cascade. Load all. |
+| "Too much overhead" | ~2500 words total. 10 seconds. |
+
 ## Example Workflow
 
 ```
