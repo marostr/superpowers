@@ -13,6 +13,8 @@ Conventions for Rails models in this project.
 2. **Clean interfaces** - Don't leak implementation details
 3. **Message passing** - Ask objects, don't reach into their associations
 4. **Pass objects, not IDs** - Method signatures should accept domain objects
+5. **Compose with concerns** - Use namespaced concerns (`Card::Closeable` in `card/closeable.rb`)
+6. **State records over booleans** - Use `has_one :closure` not `closed: boolean` for audit trail
 
 ## Clean Interfaces (Critical)
 
@@ -53,11 +55,11 @@ Order: constants → associations → validations → scopes → callbacks → p
 
 | Do | Don't |
 |----|-------|
+| `Card::Closeable` in `card/closeable.rb` | All logic in `card.rb` |
+| `has_one :closure` for state | `closed: boolean` column |
 | `user.bookmark(academy)` | `user.bookmarks.create(...)` |
-| `academy.enrolled?(student)` | `academy.enrollments.exists?(...)` |
 | Intent-based method names | Exposing associations directly |
 | Counter cache | `.count` on associations |
-| `:inverse_of` on associations | Bidirectional without inverse |
 
 ## Common Mistakes
 

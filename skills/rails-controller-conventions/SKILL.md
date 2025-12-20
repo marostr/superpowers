@@ -32,8 +32,9 @@ Use this skill when:
 1. **Message Passing OOP**: Ask objects, don't reach into their internals
 2. **Hotwire/Turbo**: Never write API/JSON code
 3. **RESTful**: Stick to 7 standard actions, one controller per resource
-4. **No Exception Control Flow**: Never catch exceptions for control flow - let them propagate
-5. **NEVER use raw SQL strings** - use ActiveRecord query methods or Arel instead
+4. **CRUD for state**: Use `resource :closure` not `post :close` - create enables, destroy disables
+5. **No Exception Control Flow**: Never catch exceptions for control flow - let them propagate
+6. **NEVER use raw SQL strings** - use ActiveRecord query methods or Arel instead
 
 ## Message Passing (Critical)
 
@@ -78,12 +79,11 @@ Every controller action MUST call `authorize`. This ensures Pundit policies are 
 
 | Do | Don't |
 |----|-------|
+| `resource :closure` | `post :close, :reopen` |
 | `user.bookmarked?(academy)` | `user.bookmarks.exists?(...)` |
-| `academy.bookmark_count` | `academy.bookmarks.count` |
 | Model methods for state | Inline association queries |
 | Turbo Streams | JSON responses |
 | 7 RESTful actions | Custom action proliferation |
-| `before_action` for setup | Repeated code in actions |
 
 ## Common Mistakes
 
