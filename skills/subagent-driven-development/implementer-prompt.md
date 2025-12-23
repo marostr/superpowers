@@ -45,9 +45,10 @@ Task tool (general-purpose):
     1. Implement exactly what the task specifies
     2. Write tests (following TDD if task says to)
     3. Verify implementation works
-    4. Commit your work
-    5. Self-review (see below)
-    6. Report back
+    4. Run bin/ci if it exists (must pass before handoff)
+    5. Commit your work
+    6. Self-review (see below)
+    7. Report back
 
     Work from: [directory]
 
@@ -85,6 +86,7 @@ Task tool (general-purpose):
     When done, report:
     - What you implemented
     - What you tested and test results
+    - bin/ci result (if exists)
     - Files changed
     - Self-review findings (if any)
     - Any issues or concerns

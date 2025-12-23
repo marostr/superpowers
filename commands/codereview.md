@@ -58,12 +58,17 @@ Task tool (superpowers:code-reviewer):
   HEAD_SHA: [sha]
 ```
 
-## Step 5: Report
+## Step 5: Run Local CI (if available)
+
+If `bin/ci` exists, run it. Can run in parallel with review agents. If it fails, stop and report.
+
+## Step 6: Report
 
 Summarize all review results:
 - ✅ Spec compliance: [passed/issues]
 - ✅ Rails conventions: [passed/skipped/issues]
 - ✅ Code quality: [passed/issues]
+- ✅ Local CI: [passed/skipped/failed]
 
 If all passed: "Ready for merge/PR"
 If any failed: List issues with file:line references

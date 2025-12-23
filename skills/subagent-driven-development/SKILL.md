@@ -5,9 +5,9 @@ description: Use when executing implementation plans with independent tasks in t
 
 # Subagent-Driven Development
 
-Execute plan by dispatching fresh subagent per task, with three-stage review after each: spec compliance, Rails conventions (if Rails), then code quality.
+Execute plan by dispatching fresh subagent per task. Implementer runs bin/ci before handoff, then three-stage review: spec compliance, Rails conventions (if Rails), code quality.
 
-**Core principle:** Fresh subagent per task + three-stage review = high quality, fast iteration
+**Core principle:** Fresh subagent per task + CI + three-stage review = high quality, fast iteration
 
 ## When to Use
 
@@ -32,7 +32,7 @@ digraph when_to_use {
 **vs. Executing Plans (parallel session):**
 - Same session (no context switch)
 - Fresh subagent per task (no context pollution)
-- Three-stage review after each task: spec compliance, Rails conventions (if Rails), code quality
+- Implementer runs bin/ci, then three-stage review: spec compliance, Rails conventions (if Rails), code quality
 - Faster iteration (no human-in-loop between tasks)
 
 ## The Process
@@ -46,7 +46,7 @@ digraph process {
         "Dispatch implementer subagent (./implementer-prompt.md)" [shape=box];
         "Implementer subagent asks questions?" [shape=diamond];
         "Answer questions, provide context" [shape=box];
-        "Implementer subagent implements, tests, commits, self-reviews" [shape=box];
+        "Implementer subagent implements, tests, runs bin/ci, commits, self-reviews" [shape=box];
         "Dispatch spec reviewer subagent (./spec-reviewer-prompt.md)" [shape=box];
         "Spec reviewer subagent confirms code matches spec?" [shape=diamond];
         "Implementer subagent fixes spec gaps" [shape=box];
@@ -152,6 +152,7 @@ Implementer: "Got it. Implementing now..."
 [Later] Implementer:
   - Implemented install-hook command
   - Added tests, 5/5 passing
+  - bin/ci: ✅ Passed
   - Self-review: Found I missed --force flag, added it
   - Committed
 
@@ -172,6 +173,7 @@ Implementer: [No questions, proceeds]
 Implementer:
   - Added verify/repair modes
   - 8/8 tests passing
+  - bin/ci: ✅ Passed
   - Self-review: All good
   - Committed
 
@@ -226,6 +228,7 @@ Done!
 - Questions surfaced before work begins (not after)
 
 **Quality gates:**
+- Implementer runs bin/ci before handoff (ensures green state)
 - Self-review catches issues before handoff
 - Two-stage review: spec compliance, then code quality
 - Review loops ensure fixes actually work
@@ -242,6 +245,7 @@ Done!
 
 **Never:**
 - Skip reviews (spec compliance OR code quality)
+- Skip bin/ci before handoff (implementer responsibility)
 - Proceed with unfixed issues
 - Dispatch multiple implementation subagents in parallel (conflicts)
 - Make subagent read plan file (provide full text instead)
