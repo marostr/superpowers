@@ -7,7 +7,7 @@ description: Use when you have a written implementation plan to execute in a sep
 
 ## Overview
 
-Load plan, review critically, execute tasks in batches, report for review between batches.
+Load plan, review critically, execute tasks in batches, report for review between batches. For Rails projects, three-stage review after each batch: spec compliance, Rails conventions, code quality.
 
 **Core principle:** Batch execution with checkpoints for architect review.
 
@@ -30,10 +30,37 @@ For each task:
 3. Run verifications as specified
 4. Mark as completed
 
+## Rails Projects - MANDATORY
+
+**For Rails projects, load ALL convention skills BEFORE executing any task:**
+
+```
+superpowers:rails-controller-conventions
+superpowers:rails-model-conventions
+superpowers:rails-view-conventions
+superpowers:rails-policy-conventions
+superpowers:rails-job-conventions
+superpowers:rails-migration-conventions
+superpowers:rails-stimulus-conventions
+superpowers:rails-testing-conventions
+```
+
+**After each batch, add Rails conventions check:**
+1. Spec compliance (does code match plan?)
+2. Rails conventions (does code follow project conventions?)
+3. Code quality (is code well-structured?)
+
+| Rationalization | Reality |
+|-----------------|---------|
+| "I already know Rails conventions" | These are PROJECT conventions. Load them. |
+| "Plan already covers conventions" | Plan is architecture. Skills are implementation. |
+| "Batch is small, conventions don't matter" | Small violations compound. Check every batch. |
+
 ### Step 3: Report
 When batch complete:
 - Show what was implemented
 - Show verification output
+- **For Rails projects:** Note any convention considerations
 - Say: "Ready for feedback."
 
 ### Step 4: Continue
@@ -72,5 +99,6 @@ After all tasks complete and verified:
 - Follow plan steps exactly
 - Don't skip verifications
 - Reference skills when plan says to
+- **For Rails projects:** Load ALL convention skills before first task
 - Between batches: just report and wait
 - Stop when blocked, don't guess

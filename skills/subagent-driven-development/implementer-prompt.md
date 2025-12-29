@@ -16,6 +16,19 @@ Task tool (general-purpose):
 
     [Scene-setting: where this fits, dependencies, architectural context]
 
+    ## Required Skills (Rails projects)
+
+    [If Rails project, controller adds this section:]
+    Load ALL Rails convention skills BEFORE implementing:
+    superpowers:rails-controller-conventions
+    superpowers:rails-model-conventions
+    superpowers:rails-view-conventions
+    superpowers:rails-policy-conventions
+    superpowers:rails-job-conventions
+    superpowers:rails-migration-conventions
+    superpowers:rails-stimulus-conventions
+    superpowers:rails-testing-conventions
+
     ## Before You Begin
 
     If you have questions about:
@@ -32,9 +45,10 @@ Task tool (general-purpose):
     1. Implement exactly what the task specifies
     2. Write tests (following TDD if task says to)
     3. Verify implementation works
-    4. Commit your work
-    5. Self-review (see below)
-    6. Report back
+    4. Run bin/ci if it exists (must pass before handoff)
+    5. Commit your work
+    6. Self-review (see below)
+    7. Report back
 
     Work from: [directory]
 
@@ -72,6 +86,7 @@ Task tool (general-purpose):
     When done, report:
     - What you implemented
     - What you tested and test results
+    - bin/ci result (if exists)
     - Files changed
     - Self-review findings (if any)
     - Any issues or concerns

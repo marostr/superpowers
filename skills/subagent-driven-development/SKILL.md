@@ -5,9 +5,9 @@ description: Use when executing implementation plans with independent tasks in t
 
 # Subagent-Driven Development
 
-Execute plan by dispatching fresh subagent per task, with two-stage review after each: spec compliance review first, then code quality review.
+Execute plan by dispatching fresh subagent per task. Implementer runs bin/ci before handoff, then three-stage review: spec compliance, Rails conventions (if Rails), code quality.
 
-**Core principle:** Fresh subagent per task + two-stage review (spec then quality) = high quality, fast iteration
+**Core principle:** Fresh subagent per task + CI + three-stage review = high quality, fast iteration
 
 ## When to Use
 
@@ -32,7 +32,7 @@ digraph when_to_use {
 **vs. Executing Plans (parallel session):**
 - Same session (no context switch)
 - Fresh subagent per task (no context pollution)
-- Two-stage review after each task: spec compliance first, then code quality
+- Implementer runs bin/ci, then three-stage review: spec compliance, Rails conventions (if Rails), code quality
 - Faster iteration (no human-in-loop between tasks)
 
 ## The Process
@@ -46,10 +46,14 @@ digraph process {
         "Dispatch implementer subagent (./implementer-prompt.md)" [shape=box];
         "Implementer subagent asks questions?" [shape=diamond];
         "Answer questions, provide context" [shape=box];
-        "Implementer subagent implements, tests, commits, self-reviews" [shape=box];
+        "Implementer subagent implements, tests, runs bin/ci, commits, self-reviews" [shape=box];
         "Dispatch spec reviewer subagent (./spec-reviewer-prompt.md)" [shape=box];
         "Spec reviewer subagent confirms code matches spec?" [shape=diamond];
         "Implementer subagent fixes spec gaps" [shape=box];
+        "Rails project?" [shape=diamond];
+        "Dispatch Rails reviewer subagent (./rails-reviewer-prompt.md)" [shape=box];
+        "Rails reviewer subagent approves?" [shape=diamond];
+        "Implementer subagent fixes Rails issues" [shape=box];
         "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" [shape=box];
         "Code quality reviewer subagent approves?" [shape=diamond];
         "Implementer subagent fixes quality issues" [shape=box];
@@ -70,7 +74,13 @@ digraph process {
     "Dispatch spec reviewer subagent (./spec-reviewer-prompt.md)" -> "Spec reviewer subagent confirms code matches spec?";
     "Spec reviewer subagent confirms code matches spec?" -> "Implementer subagent fixes spec gaps" [label="no"];
     "Implementer subagent fixes spec gaps" -> "Dispatch spec reviewer subagent (./spec-reviewer-prompt.md)" [label="re-review"];
-    "Spec reviewer subagent confirms code matches spec?" -> "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" [label="yes"];
+    "Spec reviewer subagent confirms code matches spec?" -> "Rails project?" [label="yes"];
+    "Rails project?" -> "Dispatch Rails reviewer subagent (./rails-reviewer-prompt.md)" [label="yes"];
+    "Rails project?" -> "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" [label="no"];
+    "Dispatch Rails reviewer subagent (./rails-reviewer-prompt.md)" -> "Rails reviewer subagent approves?";
+    "Rails reviewer subagent approves?" -> "Implementer subagent fixes Rails issues" [label="no"];
+    "Implementer subagent fixes Rails issues" -> "Dispatch Rails reviewer subagent (./rails-reviewer-prompt.md)" [label="re-review"];
+    "Rails reviewer subagent approves?" -> "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" [label="yes"];
     "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" -> "Code quality reviewer subagent approves?";
     "Code quality reviewer subagent approves?" -> "Implementer subagent fixes quality issues" [label="no"];
     "Implementer subagent fixes quality issues" -> "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" [label="re-review"];
@@ -86,7 +96,39 @@ digraph process {
 
 - `./implementer-prompt.md` - Dispatch implementer subagent
 - `./spec-reviewer-prompt.md` - Dispatch spec compliance reviewer subagent
+- `./rails-reviewer-prompt.md` - Dispatch Rails conventions reviewer (Rails projects only)
 - `./code-quality-reviewer-prompt.md` - Dispatch code quality reviewer subagent
+
+## Rails Projects - MANDATORY
+
+**For Rails projects:**
+
+1. Include this in EVERY implementer prompt:
+```
+Load ALL Rails convention skills before implementing:
+superpowers:rails-controller-conventions
+superpowers:rails-model-conventions
+superpowers:rails-view-conventions
+superpowers:rails-policy-conventions
+superpowers:rails-job-conventions
+superpowers:rails-migration-conventions
+superpowers:rails-stimulus-conventions
+superpowers:rails-testing-conventions
+```
+
+2. Add Rails conventions review after spec compliance:
+```
+Review order for Rails:
+1. Spec compliance (./spec-reviewer-prompt.md)
+2. Rails conventions (./rails-reviewer-prompt.md)  ← NEW
+3. Code quality (./code-quality-reviewer-prompt.md)
+```
+
+| Rationalization | Reality |
+|-----------------|---------|
+| "Subagent knows Rails" | Project conventions differ. Load skills. |
+| "Code quality covers conventions" | Different concern. Rails review is specific. |
+| "Too many reviews" | 3 focused reviews catch more than 1 broad review. |
 
 ## Example Workflow
 
@@ -110,6 +152,7 @@ Implementer: "Got it. Implementing now..."
 [Later] Implementer:
   - Implemented install-hook command
   - Added tests, 5/5 passing
+  - bin/ci: ✅ Passed
   - Self-review: Found I missed --force flag, added it
   - Committed
 
@@ -130,6 +173,7 @@ Implementer: [No questions, proceeds]
 Implementer:
   - Added verify/repair modes
   - 8/8 tests passing
+  - bin/ci: ✅ Passed
   - Self-review: All good
   - Committed
 
@@ -184,6 +228,7 @@ Done!
 - Questions surfaced before work begins (not after)
 
 **Quality gates:**
+- Implementer runs bin/ci before handoff (ensures green state)
 - Self-review catches issues before handoff
 - Two-stage review: spec compliance, then code quality
 - Review loops ensure fixes actually work
@@ -200,6 +245,7 @@ Done!
 
 **Never:**
 - Skip reviews (spec compliance OR code quality)
+- Skip bin/ci before handoff (implementer responsibility)
 - Proceed with unfixed issues
 - Dispatch multiple implementation subagents in parallel (conflicts)
 - Make subagent read plan file (provide full text instead)
