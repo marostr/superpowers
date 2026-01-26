@@ -14,6 +14,7 @@ Conventions for Rails views and ViewComponents in this project.
 3. **NO custom helpers** - `app/helpers/` is prohibited. Use ViewComponents instead
 4. **Dumb views** - No complex logic in ERB, delegate to models or components
 5. **Stimulus for JS** - All JavaScript through Stimulus controllers
+6. **Don't duplicate model logic** - If a model has a method, delegate to it; don't reimplement the logic in the component
 
 ## ViewComponents (Required for Presentation Logic)
 
@@ -44,6 +45,7 @@ Use ViewComponents for: formatting, conditional rendering, computed display valu
 | Do | Don't |
 |----|-------|
 | `current_user.bookmarked?(item)` | `current_user.bookmarks.exists?(...)` |
+| `task.requires_review?` | `task.review_criteria.any?` in component |
 | Turbo frames for updates | JSON API calls |
 | Stimulus for JS behavior | Inline JavaScript |
 | Partials for simple markup | Duplicated markup |
@@ -56,3 +58,4 @@ Use ViewComponents for: formatting, conditional rendering, computed display valu
 3. **Reaching into associations** - Use model methods
 4. **Inline JavaScript** - Use Stimulus controllers
 5. **JSON API calls** - Use Turbo frames/streams
+6. **Duplicating model logic** - Delegate to model methods, don't reimplement
