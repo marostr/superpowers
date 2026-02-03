@@ -15,4 +15,7 @@ Task tool (superpowers:rails-reviewer):
   HEAD_SHA: [current commit]
 ```
 
-**Rails reviewer returns:** ✅ Conventions followed, or ❌ violations with file:line references
+**Rails reviewer returns:** Severity-classified results:
+- Conventions followed well (specific good patterns observed)
+- Critical/Important/Suggestion issues with `file:line` references and idiomatic fixes
+- Summary: ✅ conventions followed, or ❌ N critical, N important, N suggestions
