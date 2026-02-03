@@ -244,6 +244,7 @@ Done!
 ## Red Flags
 
 **Never:**
+- Start implementation on main/master branch without explicit user consent
 - Skip reviews (spec compliance OR code quality)
 - Skip bin/ci before handoff (implementer responsibility)
 - Proceed with unfixed issues
@@ -275,6 +276,7 @@ Done!
 ## Integration
 
 **Required workflow skills:**
+- **superpowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
 - **superpowers:writing-plans** - Creates the plan this skill executes
 - **superpowers:requesting-code-review** - Code review template for reviewer subagents
 - **superpowers:finishing-a-development-branch** - Complete development after all tasks
