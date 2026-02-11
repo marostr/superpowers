@@ -1,5 +1,70 @@
 # Superpowers Release Notes
 
+## v4.2.0 (2026-02-05)
+
+### Breaking Changes
+
+**Codex: Replaced bootstrap CLI with native skill discovery**
+
+The `superpowers-codex` bootstrap CLI, Windows `.cmd` wrapper, and related bootstrap content file have been removed. Codex now uses native skill discovery via `~/.agents/skills/superpowers/` symlink, so the old `use_skill`/`find_skills` CLI tools are no longer needed.
+
+Installation is now just clone + symlink (documented in INSTALL.md). No Node.js dependency required. The old `~/.codex/skills/` path is deprecated.
+
+### Fixes
+
+**Windows: Fixed Claude Code 2.1.x hook execution (#331)**
+
+Claude Code 2.1.x changed how hooks execute on Windows: it now auto-detects `.sh` files in commands and prepends `bash`. This broke the polyglot wrapper pattern because `bash "run-hook.cmd" session-start.sh` tries to execute the `.cmd` file as a bash script.
+
+Fix: hooks.json now calls session-start.sh directly. Claude Code 2.1.x handles the bash invocation automatically. Also added .gitattributes to enforce LF line endings for shell scripts (fixes CRLF issues on Windows checkout).
+
+**Windows: SessionStart hook runs async to prevent terminal freeze (#404, #413, #414, #419)**
+
+The synchronous SessionStart hook blocked the TUI from entering raw mode on Windows, freezing all keyboard input. Running the hook async prevents the freeze while still injecting superpowers context.
+
+**Windows: Fixed O(n^2) `escape_for_json` performance**
+
+The character-by-character loop using `${input:$i:1}` was O(n^2) in bash due to substring copy overhead. On Windows Git Bash this took 60+ seconds. Replaced with bash parameter substitution (`${s//old/new}`) which runs each pattern as a single C-level pass — 7x faster on macOS, dramatically faster on Windows.
+
+**Codex: Fixed Windows/PowerShell invocation (#285, #243)**
+
+- Windows doesn't respect shebangs, so directly invoking the extensionless `superpowers-codex` script triggered an "Open with" dialog. All invocations now prefixed with `node`.
+- Fixed `~/` path expansion on Windows — PowerShell doesn't expand `~` when passed as an argument to `node`. Changed to `$HOME` which expands correctly in both bash and PowerShell.
+
+**Codex: Fixed path resolution in installer**
+
+Used `fileURLToPath()` instead of manual URL pathname parsing to correctly handle paths with spaces and special characters on all platforms.
+
+**Codex: Fixed stale skills path in writing-skills**
+
+Updated `~/.codex/skills/` reference (deprecated) to `~/.agents/skills/` for native discovery.
+
+### Improvements
+
+**Worktree isolation now required before implementation**
+
+Added `using-git-worktrees` as a required skill for both `subagent-driven-development` and `executing-plans`. Implementation workflows now explicitly require setting up an isolated worktree before starting work, preventing accidental work directly on main.
+
+**Main branch protection softened to require explicit consent**
+
+Instead of prohibiting main branch work entirely, the skills now allow it with explicit user consent. More flexible while still ensuring users are aware of the implications.
+
+**Simplified installation verification**
+
+Removed `/help` command check and specific slash command list from verification steps. Skills are primarily invoked by describing what you want to do, not by running specific commands.
+
+**Codex: Clarified subagent tool mapping in bootstrap**
+
+Improved documentation of how Codex tools map to Claude Code equivalents for subagent workflows.
+
+### Tests
+
+- Added worktree requirement test for subagent-driven-development
+- Added main branch red flag warning test
+- Fixed case sensitivity in skill recognition test assertions
+
+---
+
 ## v4.1.1 (2026-01-23)
 
 ### Fixes
