@@ -1,85 +1,63 @@
 ---
 name: rails-controller-conventions
-description: Use when creating or modifying Rails controllers in app/controllers
+description: Use when creating or modifying Rails controllers, adding actions, setting up authorization, configuring routes, or handling Turbo responses
 ---
 
 # Rails Controller Conventions
 
-Conventions for Rails controllers in this project.
-
-## When to Use This Skill
-
-Automatically activates when working on:
-- `app/controllers/**/*.rb`
-
-Use this skill when:
-- Creating new controllers
-- Adding or modifying controller actions
-- Implementing request/response handling
-- Setting up authentication or authorization
-- Configuring routes
-- Working with Turbo/Hotwire responses
-
-## Core Responsibilities
-
-1. **Thin Controllers**: No business logic - delegate to models
-2. **Request Handling**: Process parameters, handle formats, manage responses
-3. **Authorization**: Every action MUST call `authorize` - no exceptions
-4. **Routing**: Design clean, RESTful routes
+Controllers are thin request handlers. They authorize, delegate to models, and respond — nothing more.
 
 ## Core Principles
 
-1. **Message Passing OOP**: Ask objects, don't reach into their internals
-2. **Hotwire/Turbo**: Never write API/JSON code
-3. **RESTful**: Stick to 7 standard actions, one controller per resource
-4. **CRUD for state**: Use `resource :closure` not `post :close` - create enables, destroy disables
-5. **No Exception Control Flow**: Never catch exceptions for control flow - let them propagate
-6. **NEVER use raw SQL strings** - use ActiveRecord query methods or Arel instead
+1. **Thin controllers** - No business logic. Delegate to models
+2. **Authorize everything** - Every action MUST call `authorize`. No exceptions
+3. **Message passing** - Ask objects, don't reach into their internals (see `rails-model-conventions`)
+4. **RESTful** - 7 standard actions, one controller per resource
+5. **CRUD for state** - `resource :closure` not `post :close`. Create enables, destroy disables
+6. **Hotwire/Turbo only** - Never write API/JSON response code
+7. **No exception control flow** - Let exceptions propagate
+8. **No raw SQL** - ActiveRecord query methods or Arel only
 
-## Message Passing (Critical)
+## Authorization
 
-**WRONG** - Reaching into associations:
+Every controller action MUST call `authorize` to enforce Pundit policies.
+
 ```ruby
-# In view - asking about internals
-current_user.academy_bookmarks.exists?(academy: academy)
+def create
+  @article = Article.new(article_params)
+  authorize @article                    # BEFORE performing the action
+  @article.save!
+  redirect_to @article
+end
 
-# In controller - manipulating internals
-@bookmark = current_user.academy_bookmarks.find_by(academy: @academy)
-```
-
-**RIGHT** - Ask the object:
-```ruby
-# In view - ask user
-current_user.bookmarked?(academy)
-
-# Or ask academy
-academy.bookmarked_by?(current_user)
-
-# Model provides the answer
-class User < ApplicationRecord
-  def bookmarked?(academy)
-    academy_bookmarks.exists?(academy: academy)
-  end
+def index
+  authorize Article                     # Class, not instance
+  @articles = policy_scope(Article)
 end
 ```
 
-**Principle**: Sender sends message to Receiver. Receiver performs action or returns data. Sender never reaches into Receiver's internal structure.
+- `[:companies, resource]` for namespaced policies
+- `index`/`new`: authorize the class (no instance yet)
+- Actions with instances: authorize the instance
 
-## Authorization (Critical)
+## Message Passing
 
-Every controller action MUST call `authorize`. This ensures Pundit policies are enforced.
+```ruby
+# WRONG - reaching into associations
+@bookmark = current_user.academy_bookmarks.find_by(academy: @academy)
 
-**Key points:**
-- Use `[:companies, resource]` for namespaced policies
-- For `index`/`new`: authorize the class (no instance yet)
-- For actions with instances: authorize the instance
-- Authorize BEFORE performing the action
+# RIGHT - ask the object
+@bookmark = current_user.bookmark_for(@academy)
+```
+
+See `rails-model-conventions` for the full pattern and model-side implementation.
 
 ## Quick Reference
 
 | Do | Don't |
 |----|-------|
 | `resource :closure` | `post :close, :reopen` |
+| `authorize @resource` in every action | Skip authorization |
 | `user.bookmarked?(academy)` | `user.bookmarks.exists?(...)` |
 | Model methods for state | Inline association queries |
 | Turbo Streams | JSON responses |
@@ -93,3 +71,5 @@ Every controller action MUST call `authorize`. This ensures Pundit policies are 
 4. **respond_to with json** - Use turbo_stream only
 5. **Catching exceptions for control flow** - Let exceptions propagate
 6. **Fat actions** - Extract to model methods
+
+**Remember:** Controllers authorize and delegate. Everything else belongs in models.

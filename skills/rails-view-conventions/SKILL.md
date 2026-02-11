@@ -1,30 +1,32 @@
 ---
 name: rails-view-conventions
-description: Use when creating or modifying Rails views, partials, or ViewComponents in app/views or app/components
+description: Use when creating or modifying Rails views, partials, or ViewComponents in app/views or app/components, including Turbo frames and form templates
 ---
 
 # Rails View Conventions
 
-Conventions for Rails views and ViewComponents in this project.
+Views are dumb templates. Presentation logic lives in ViewComponents, domain logic lives in models.
 
 ## Core Principles
 
-1. **Hotwire/Turbo** - Use Turbo frames for dynamic updates, never JSON APIs
+1. **Hotwire/Turbo** - Turbo frames for dynamic updates, never JSON APIs
 2. **ViewComponents for logic** - All presentation logic in components, NOT helpers
-3. **NO custom helpers** - `app/helpers/` is prohibited. Use ViewComponents instead
-4. **Dumb views** - No complex logic in ERB, delegate to models or components
+3. **No custom helpers** - `app/helpers/` is prohibited. Use ViewComponents instead
+4. **Dumb views** - No complex logic in ERB. Delegate to models or components
 5. **Stimulus for JS** - All JavaScript through Stimulus controllers
-6. **Don't duplicate model logic** - If a model has a method, delegate to it; don't reimplement the logic in the component
+6. **Don't duplicate model logic** - Delegate to model methods, don't reimplement
 
-## ViewComponents (Required for Presentation Logic)
+## ViewComponents
 
 **Why?** Testability. Logic in views cannot be unit tested.
 
-Use ViewComponents for: formatting, conditional rendering, computed display values, anything that would go in a helper.
+Use for: formatting, conditional rendering, computed display values — anything that would go in a helper.
 
-**Models vs ViewComponents:** Models answer domain questions ("what is the deadline?"). ViewComponents answer presentation questions ("how do we display it?" - colors, icons, formatting).
+**Models vs ViewComponents:** Models answer domain questions ("what is the deadline?"). ViewComponents answer presentation questions ("how do we display it?" — colors, icons, formatting).
 
-## Message Passing (Critical)
+## Message Passing
+
+Ask models, don't reach into their internals (see `rails-model-conventions` for the full pattern):
 
 ```erb
 <%# WRONG - reaching into associations %>
@@ -36,8 +38,8 @@ Use ViewComponents for: formatting, conditional rendering, computed display valu
 
 ## Forms
 
-- Use `form_with` for all forms
-- Use Turbo for submissions (no JSON APIs)
+- `form_with` for all forms
+- Turbo for submissions (no JSON APIs)
 - Highlight errored fields inline
 
 ## Quick Reference
@@ -59,3 +61,5 @@ Use ViewComponents for: formatting, conditional rendering, computed display valu
 4. **Inline JavaScript** - Use Stimulus controllers
 5. **JSON API calls** - Use Turbo frames/streams
 6. **Duplicating model logic** - Delegate to model methods, don't reimplement
+
+**Remember:** Views render. ViewComponents present. Models decide.

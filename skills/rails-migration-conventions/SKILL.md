@@ -1,17 +1,17 @@
 ---
 name: rails-migration-conventions
-description: Use when creating or modifying database migrations in db/migrate
+description: Use when creating or modifying database migrations, adding columns, creating indexes, handling data backfills, or performing schema changes
 ---
 
 # Rails Migration Conventions
 
-Conventions for database migrations in this project.
+Migrations run against production with real data. Every migration must be safe, reversible, and data-aware.
 
 ## Core Principles
 
 1. **Always reversible** - Every migration must roll back cleanly
 2. **Test rollbacks** - Verify before considering done
-3. **Consider existing data** - Migrations run against production with real rows
+3. **Consider existing data** - Tables have real rows in production
 4. **Index foreign keys** - Every `_id` column gets an index. No exceptions
 5. **Strong types** - Use appropriate column types, not strings for everything
 
@@ -42,14 +42,14 @@ add_index :orders, [:user_id, :status]  # Composite for multi-column queries
 | Data | Type | Notes |
 |------|------|-------|
 | Money | `decimal` | Never float! `precision: 10, scale: 2` |
-| JSON | `jsonb` | Not `json` - jsonb is indexable |
+| JSON | `jsonb` | Not `json` — jsonb is indexable |
 | Booleans | `boolean` | Not string "true"/"false" |
 
 ## Dangerous Operations
 
-- **Remove column**: First `self.ignored_columns = [:col]`, deploy, then remove
-- **Rename column**: Add new, backfill, deploy, remove old. Never `rename_column`
-- **Large table indexes**: Add concurrently
+- **Remove column** - First `self.ignored_columns = [:col]`, deploy, then remove
+- **Rename column** - Add new, backfill, deploy, remove old. Never `rename_column`
+- **Large table indexes** - Add concurrently
 
 ## Quick Reference
 

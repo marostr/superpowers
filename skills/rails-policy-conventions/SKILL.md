@@ -1,17 +1,20 @@
 ---
 name: rails-policy-conventions
-description: Use when creating or modifying Pundit policies in app/policies
+description: Use when creating or modifying Pundit authorization policies, defining role-based permissions, or adding authorize calls
 ---
 
 # Rails Policy Conventions
 
-Conventions for Pundit authorization policies in this project.
+Policies answer one question: "Is this user allowed to attempt this action?" They check WHO, not WHAT or WHEN.
 
-## Core Principle: Permission Only
+## Core Principles
 
-Policies answer ONE question: **"Is this user allowed to attempt this action?"**
+1. **Permission only** - Check if the user may attempt the action, not if it will succeed
+2. **Use role helpers** - `mentor_or_above?`, `content_creator_or_above?` from ApplicationPolicy
+3. **Thin policies** - No business logic, no state checks. Return booleans only
+4. **Test in policy specs** - Authorization tests belong in `spec/policies/`, NOT request specs. Request specs use authorized users (happy path) and never mock policies
 
-They don't care if the action will succeed. That's the model's job.
+## Permission, Not State
 
 ```ruby
 # WRONG - checking state
@@ -27,22 +30,9 @@ end
 
 ## Role Hierarchy
 
-Use helpers from ApplicationPolicy:
-
 ```ruby
 mentor_or_above?           # mentor? || content_creator? || company_admin?
 content_creator_or_above?  # content_creator? || company_admin?
-```
-
-## Controller Enforcement
-
-Every action MUST call `authorize`:
-
-```ruby
-def show
-  @article = Article.find(params[:id])
-  authorize @article  # REQUIRED - no exceptions
-end
 ```
 
 ## Quick Reference
@@ -55,16 +45,10 @@ end
 | Return boolean only | Raise errors in policies |
 | Keep policies thin | Business logic in policies |
 
-## Testing
-
-**Authorization tests belong in policy specs, NOT request specs.**
-
-Policy specs are fast unit tests. Request specs use authorized users (happy path) and never mock policies.
-
 ## Common Mistakes
 
 1. **State checks in policies** - Policies check permissions, models check state
-2. **Missing authorize calls** - Every action needs authorization
+2. **Missing authorize calls** - Every controller action needs authorization
 3. **Bypassing role helpers** - Use `mentor_or_above?` not inline checks
 4. **Testing auth in request specs** - Move to policy specs
 

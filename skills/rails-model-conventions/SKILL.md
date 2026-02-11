@@ -1,22 +1,22 @@
 ---
 name: rails-model-conventions
-description: Use when creating or modifying Rails models in app/models
+description: Use when creating or modifying Rails models, adding domain logic, defining associations, extracting concerns, or designing query interfaces
 ---
 
 # Rails Model Conventions
 
-Conventions for Rails models in this project.
+Models own all domain logic. They provide clean interfaces and hide implementation details.
 
 ## Core Principles
 
 1. **Business logic lives here** - Models own ALL domain logic, not controllers
-2. **Clean interfaces** - Don't leak implementation details
+2. **Clean interfaces** - Expose intent-based methods, hide implementation
 3. **Message passing** - Ask objects, don't reach into their associations
-4. **Pass objects, not IDs** - Method signatures should accept domain objects
-5. **Compose with concerns** - Use namespaced concerns (`Card::Closeable` in `card/closeable.rb`)
-6. **State records over booleans** - Use `has_one :closure` not `closed: boolean` for audit trail
+4. **Pass objects, not IDs** - Method signatures accept domain objects
+5. **Compose with concerns** - Namespaced concerns: `Card::Closeable` in `card/closeable.rb`
+6. **State records over booleans** - `has_one :closure` not `closed: boolean` for audit trail
 
-## Clean Interfaces (Critical)
+## Clean Interfaces
 
 ```ruby
 # WRONG - leaking implementation
@@ -38,6 +38,8 @@ class User < ApplicationRecord
   end
 end
 ```
+
+Sender sends message to Receiver. Receiver performs action or returns data. Sender never reaches into Receiver's internal structure.
 
 ## Organization
 
@@ -68,3 +70,5 @@ Order: constants → associations → validations → scopes → callbacks → p
 3. **Callback hell** - Prefer explicit method calls
 4. **N+1 queries** - Use counter_cache, includes, eager loading
 5. **View logic in models** - Display formatting belongs in ViewComponents
+
+**Remember:** Models are the domain. Rich interfaces, hidden implementation.

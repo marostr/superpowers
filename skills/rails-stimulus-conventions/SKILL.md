@@ -1,25 +1,20 @@
 ---
 name: rails-stimulus-conventions
-description: Use when creating or modifying Stimulus controllers in app/components or app/packs/controllers
+description: Use when creating or modifying Stimulus controllers in app/components or app/packs/controllers, adding client-side behavior, or choosing between Turbo and JavaScript
 ---
 
 # Rails Stimulus Conventions
 
-Conventions for Stimulus JavaScript controllers in this project.
+The best Stimulus controller is one you don't write because Turbo handles it. When JS is needed, keep it thin — DOM interaction only.
 
 ## Core Principles
 
-1. **Thin Controllers** - DOM interaction ONLY. No business logic or data transformation
-2. **Turbo-First** - If it can be done server-side with Turbo, don't do it in JS
-3. **Always cleanup** - `disconnect()` must clean up what `connect()` creates
+1. **Turbo-first** - If it can be done server-side with Turbo, don't write JS
+2. **Thin controllers** - DOM interaction only. No business logic or data transformation
+3. **Always cleanup** - `disconnect()` must undo what `connect()` creates
 4. **No inline HTML** - Extract markup to templates or data attributes
 
 ## Structure
-
-- `static targets` and `static values` at top
-- `connect()` for setup, `disconnect()` for cleanup
-- Event handlers named `handle*` (e.g., `handleClick`)
-- Private methods use `#` prefix
 
 ```javascript
 import { Controller } from "@hotwired/stimulus"
@@ -38,7 +33,12 @@ export default class extends Controller {
 }
 ```
 
-## Turbo-First Pattern
+- `static targets` and `static values` at top
+- `connect()` for setup, `disconnect()` for cleanup
+- Event handlers named `handle*` (e.g., `handleClick`)
+- Private methods use `#` prefix
+
+## Turbo-First
 
 ```javascript
 // WRONG - manual fetch
@@ -70,4 +70,4 @@ Or use lazy Turbo frames: `<%= turbo_frame_tag "content", src: path, loading: :l
 3. **Direct fetch** - Prefer Turbo Frames/Streams
 4. **Querying outside element** - Use targets, stay within scope
 
-**Remember:** The best Stimulus controller is one you don't write because Turbo handles it.
+**Remember:** Turbo first. Stimulus only for what HTML can't express.
