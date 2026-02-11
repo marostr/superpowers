@@ -1,6 +1,6 @@
 ---
 name: rails-view-conventions
-description: Use when creating or modifying Rails views, partials, ViewComponents, Turbo frames, or form templates
+description: Use when creating or modifying Rails views, partials, or ViewComponents in app/views or app/components, including Turbo frames and form templates
 ---
 
 # Rails View Conventions

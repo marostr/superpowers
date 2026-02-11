@@ -1,6 +1,6 @@
 ---
 name: rails-stimulus-conventions
-description: Use when creating or modifying Stimulus controllers, adding client-side behavior, or choosing between Turbo and JavaScript
+description: Use when creating or modifying Stimulus controllers in app/components or app/packs/controllers, adding client-side behavior, or choosing between Turbo and JavaScript
 ---
 
 # Rails Stimulus Conventions

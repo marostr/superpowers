@@ -40,6 +40,18 @@ end
 - `index`/`new`: authorize the class (no instance yet)
 - Actions with instances: authorize the instance
 
+## Message Passing
+
+```ruby
+# WRONG - reaching into associations
+@bookmark = current_user.academy_bookmarks.find_by(academy: @academy)
+
+# RIGHT - ask the object
+@bookmark = current_user.bookmark_for(@academy)
+```
+
+See `rails-model-conventions` for the full pattern and model-side implementation.
+
 ## Quick Reference
 
 | Do | Don't |

@@ -12,7 +12,7 @@ Policies answer one question: "Is this user allowed to attempt this action?" The
 1. **Permission only** - Check if the user may attempt the action, not if it will succeed
 2. **Use role helpers** - `mentor_or_above?`, `content_creator_or_above?` from ApplicationPolicy
 3. **Thin policies** - No business logic, no state checks. Return booleans only
-4. **Test in policy specs** - Authorization tests belong in `spec/policies/`, NOT request specs
+4. **Test in policy specs** - Authorization tests belong in `spec/policies/`, NOT request specs. Request specs use authorized users (happy path) and never mock policies
 
 ## Permission, Not State
 
