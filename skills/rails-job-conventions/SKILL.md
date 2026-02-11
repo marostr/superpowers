@@ -1,20 +1,20 @@
 ---
 name: rails-job-conventions
-description: Use when creating or modifying background jobs in app/jobs
+description: Use when creating or modifying background jobs, implementing async processing, or designing for idempotency and retries
 ---
 
 # Rails Job Conventions
 
-Conventions for background jobs in this project.
+Jobs are thin dispatchers. They find a record and call a method on it — nothing more.
 
 ## Core Principles
 
-1. **Idempotent** - Jobs MUST be safe to run multiple times. Sidekiq retries.
-2. **Thin** - Jobs orchestrate, they don't implement. Delegate to models.
+1. **Idempotent** - Jobs MUST be safe to run multiple times. Sidekiq retries
+2. **Thin** - Jobs orchestrate, they don't implement. Delegate to models
 3. **ApplicationJob** - Always inherit from ApplicationJob, not Sidekiq::Job
-4. **Let errors raise** - Don't use `discard_on`. Fix root causes.
+4. **Let errors raise** - Don't use `discard_on`. Fix root causes
 
-## Idempotency (Critical)
+## Idempotency
 
 ```ruby
 # WRONG - doubles credits on retry

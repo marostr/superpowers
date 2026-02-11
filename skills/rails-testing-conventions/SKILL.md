@@ -1,13 +1,13 @@
 ---
 name: rails-testing-conventions
-description: Use when creating or modifying RSpec tests in spec/
+description: Use when creating or modifying RSpec tests — request, system, model, policy, or component specs
 ---
 
 # Rails Testing Conventions
 
-Conventions for RSpec tests in this project.
+Tests verify behavior, not implementation. Real data, real objects, pristine output.
 
-## Core Principles (Non-Negotiable)
+## Core Principles
 
 1. **Never test mocked behavior** - If you mock it, you're not testing it
 2. **No mocks in integration tests** - Request/system specs use real data. WebMock for external APIs only
