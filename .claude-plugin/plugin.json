@@ -9,9 +9,5 @@
   "homepage": "https://github.com/trainual/superpowers-rails",
   "repository": "https://github.com/trainual/superpowers-rails",
   "license": "MIT",
-  "keywords": ["skills", "tdd", "debugging", "rails", "jsonapi", "interactors", "conventions", "workflows"],
-  "skills": "./skills/",
-  "agents": "./agents/",
-  "commands": "./commands/",
-  "hooks": "./hooks/hooks.json"
+  "keywords": ["skills", "tdd", "debugging", "rails", "jsonapi", "interactors", "conventions", "workflows"]
 }
