@@ -1,0 +1,1 @@
+The goals index endpoint needs complex filtering - users should be able to filter by view (my goals, people I manage, company), active status, and owner. This filtering logic is getting too complex for the controller.

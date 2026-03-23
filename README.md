@@ -1,180 +1,128 @@
-# Superpowers
+# Superpowers Trainual
 
-Superpowers is a complete software development workflow for your coding agents, built on top of a set of composable "skills" and some initial instructions that make sure your agent uses them.
+![Workflow](workflow.png)
 
-## How it works
+Superpowers Trainual is a fork of [Superpowers](https://github.com/obra/superpowers) customized with Trainual's full-stack conventions — JSON:API, ActiveInteractor, Rails engines, RTK Query, TypeScript, and React component patterns.
 
-It starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do. 
+When installed as a Claude Code plugin, it teaches your coding agent Trainual's codebase conventions and **enforces them via hooks** — the agent must load the relevant convention skill before it can edit governed files.
 
-Once it's teased a spec out of the conversation, it shows it to you in chunks short enough to actually read and digest. 
+## How It Works
 
-After you've signed off on the design, your agent puts together an implementation plan with bite-sized tasks describing what to build and where. It uses intent-level steps for routine work and exact code only for fragile operations like migrations. It emphasizes true red/green TDD, YAGNI (You Aren't Gonna Need It), and DRY.
+The plugin injects convention awareness into every coding session:
 
-Next up, once you say "go", it launches a *subagent-driven-development* process, having agents work through each engineering task, inspecting and reviewing their work, and continuing forward. It's not uncommon for Claude to be able to work autonomously for a couple hours at a time without deviating from the plan you put together.
-
-There's a bunch more to it, but that's the core of the system. And because the skills trigger automatically, you don't need to do anything special. Your coding agent just has Superpowers.
-
-
-## Sponsorship
-
-If Superpowers has helped you do stuff that makes money and you are so inclined, I'd greatly appreciate it if you'd consider [sponsoring my opensource work](https://github.com/sponsors/obra).
-
-Thanks! 
-
-- Jesse
-
+1. **Session start** — The agent learns it has superpowers and how to use skills
+2. **Before any edit** — A PreToolUse hook checks the file type and blocks the edit unless the matching convention skill is loaded
+3. **During planning** — Writing-plans and executing-plans skills require loading all conventions before generating tasks
+4. **During review** — The rails-reviewer agent validates changes against all convention skills
 
 ## Installation
 
-**Note:** Installation differs by platform. Claude Code or Cursor have built-in plugin marketplaces. Codex and OpenCode require manual setup.
-
-### Claude Code Official Marketplace
-
-Superpowers is available via the [official Claude plugin marketplace](https://claude.com/plugins/superpowers)
-
-Install the plugin from Claude marketplace:
+### Claude Code
 
 ```bash
-/plugin install superpowers@claude-plugins-official
+/plugin install superpowers-trainual@trainual
 ```
 
-### Claude Code (via Plugin Marketplace)
-
-In Claude Code, register the marketplace first:
+Or register the marketplace and install:
 
 ```bash
-/plugin marketplace add obra/superpowers-marketplace
+/plugin marketplace add trainual/superpowers-rails
+/plugin install superpowers-trainual@superpowers-trainual
 ```
 
-Then install the plugin from this marketplace:
+## Convention Skills
+
+### Rails Backend
+
+| Skill | Enforced On | What It Covers |
+|-------|-------------|----------------|
+| `rails-controller-conventions` | `app/controllers/*.rb` | JSON:API via `Ajax::JSONAPI::BaseController`, concern stack DSL, brownfield awareness |
+| `rails-model-conventions` | `app/models/*.rb` | Lean models, engine namespacing, concerns, soft delete patterns |
+| `rails-interactor-conventions` | `app/interactors/*.rb` | `ActiveInteractor`, `TransactionOrganizer`, context classes, `after_success` hooks |
+| `jsonapi-conventions` | `app/serializers/*.rb` | `jsonapi-serializer` gem, relationships, computed meta, error handling |
+| `rails-engine-conventions` | Engine files | `isolate_namespace`, feature gates, cross-namespace references, migration paths |
+| `query-object-conventions` | `app/queries/*.rb` | `Patterns::Query`, `.then` pipelines, controller integration |
+| `rails-policy-conventions` | `app/policies/*.rb` | Pundit with mandatory `Scope` classes, role hierarchy |
+| `rails-testing-conventions` | `spec/*.rb` | Request specs, interactor specs, policy specs, serializer specs |
+| `rails-job-conventions` | `app/jobs/*.rb`, `app/workers/*.rb` | Sidekiq workers, idempotency, feature gates in engine workers |
+| `rails-migration-conventions` | `db/migrate/*.rb` | Engine table prefixes, reversibility, data safety |
+| `rails-view-conventions` | `app/views/*.erb` | ViewComponents, Turbo frames, message passing |
+| `rails-stimulus-conventions` | `*_controller.js` | Thin controllers, Turbo-first, cleanup |
+
+### Frontend
+
+| Skill | Enforced On | What It Covers |
+|-------|-------------|----------------|
+| `typescript-conventions` | `react/*.ts`, `react/*.tsx` | Strict mode, path aliases, no `any`, explicit interfaces |
+| `rtk-query-conventions` | `redux/services/*`, `redux/domains/*Slice.ts` | `injectEndpoints`, `transformResponse`/`toCamelCase`, cache tags |
+| `dto-transformer-conventions` | `react/types/*`, `react/models/*` | JSON:API type definitions, DTO vs entity types, key-case transformation |
+| `react-component-conventions` | `react/components/*.tsx`, `react/hooks/*`, `react/contexts/*` | Functional components, typed props, hooks-first, Saguaro design system |
+| `frontend-testing-conventions` | `*.test.tsx`, `*.test.ts` | Vitest + React Testing Library + MSW, accessible queries |
+
+## Workflow Skills
+
+These process skills are inherited from upstream Superpowers and work as-is:
+
+- **brainstorming** — Socratic design refinement before writing code
+- **writing-plans** — Bite-sized task decomposition with intent-level steps
+- **subagent-driven-development** — Fresh subagent per task with three-stage review
+- **executing-plans** — Batch execution with human checkpoints
+- **test-driven-development** — RED-GREEN-REFACTOR cycle enforcement
+- **systematic-debugging** — 4-phase root cause analysis
+- **requesting-code-review** / **receiving-code-review** — Structured review workflow
+- **using-git-worktrees** — Isolated development branches
+- **finishing-a-development-branch** — Merge/PR decision workflow
+
+## Agents
+
+| Agent | Purpose |
+|-------|---------|
+| `rails-reviewer` | Reviews changes against all Trainual conventions (backend + frontend). Includes brownfield exemption — only flags violations in new/changed code |
+| `code-reviewer` | Reviews against plan alignment, code quality, and architecture |
+
+## Hook Enforcement
+
+The `hooks/rails-conventions.sh` script runs before every Edit/Write/MultiEdit operation. It pattern-matches the file path and blocks the edit unless the matching convention skill has been loaded in the current session.
+
+Example: trying to edit `app/serializers/operations/goal_serializer.rb` without loading `jsonapi-conventions` first will produce:
+
+```
+BLOCKED: You must load the superpowers-trainual:jsonapi-conventions skill before editing serializer files.
+
+STOP. Do not immediately retry your edit.
+1. Load the skill: Skill(skill: "superpowers-trainual:jsonapi-conventions")
+2. Read the conventions carefully
+3. Reconsider whether your planned edit follows them
+4. Adjust your approach if needed, then edit
+```
+
+## Testing
 
 ```bash
-/plugin install superpowers@superpowers-marketplace
+# Run hook enforcement tests (32 tests, no Claude API needed)
+tests/hook-enforcement/run-all.sh
+
+# Run skill triggering tests (requires Claude Code CLI)
+tests/skill-triggering/run-all.sh
+
+# Run integration tests (requires Claude Code CLI, 10-30 min)
+tests/claude-code/test-subagent-driven-development-integration.sh
 ```
 
-### Cursor (via Plugin Marketplace)
+## Brownfield Awareness
 
-In Cursor Agent chat, install from marketplace:
+Trainual's codebase has three eras of patterns coexisting:
 
-```text
-/add-plugin superpowers
-```
+- **Legacy** (~47% of controllers) — `Ajax::AccountController` + `render_success`/`render_failure` + Panko serializers
+- **Transitional** — Main-app interactors (mixed quality), `Patterns::Query`, some JSON:API serializers
+- **Modern** (~21% of controllers, growing) — `Ajax::JSONAPI::BaseController` + `TransactionOrganizer` + clean JSON:API
 
-or search for "superpowers" in the plugin marketplace.
-
-### Codex
-
-Tell Codex:
-
-```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.codex/INSTALL.md
-```
-
-**Detailed docs:** [docs/README.codex.md](docs/README.codex.md)
-
-### OpenCode
-
-Tell OpenCode:
-
-```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md
-```
-
-**Detailed docs:** [docs/README.opencode.md](docs/README.opencode.md)
-
-### Gemini CLI
-
-```bash
-gemini extensions install https://github.com/obra/superpowers
-```
-
-To update:
-
-```bash
-gemini extensions update superpowers
-```
-
-### Verify Installation
-
-Start a new session in your chosen platform and ask for something that should trigger a skill (for example, "help me plan this feature" or "let's debug this issue"). The agent should automatically invoke the relevant superpowers skill.
-
-## The Basic Workflow
-
-1. **brainstorming** - Activates before writing code. Refines rough ideas through questions, explores alternatives, presents design in sections for validation. Saves design document.
-
-2. **using-git-worktrees** - Activates after design approval. Creates isolated workspace on new branch, runs project setup, verifies clean test baseline.
-
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Intent-level steps by default, exact code for migrations and fragile ops.
-
-4. **subagent-driven-development** or **executing-plans** - Activates with plan. Dispatches fresh subagent per task with three-stage review (spec compliance, Rails conventions, code quality), or executes in batches with human checkpoints.
-
-5. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
-
-6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
-
-7. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests, presents options (merge/PR/keep/discard), cleans up worktree.
-
-**The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
-
-## What's Inside
-
-### Skills Library
-
-**Testing**
-- **test-driven-development** - RED-GREEN-REFACTOR cycle (includes testing anti-patterns reference)
-
-**Debugging**
-- **systematic-debugging** - 4-phase root cause process (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)
-- **verification-before-completion** - Ensure it's actually fixed
-
-**Collaboration** 
-- **brainstorming** - Socratic design refinement
-- **writing-plans** - Detailed implementation plans
-- **executing-plans** - Batch execution with checkpoints
-- **dispatching-parallel-agents** - Concurrent subagent workflows
-- **requesting-code-review** - Pre-review checklist
-- **receiving-code-review** - Responding to feedback
-- **using-git-worktrees** - Parallel development branches
-- **finishing-a-development-branch** - Merge/PR decision workflow
-- **subagent-driven-development** - Fast iteration with three-stage review (spec, Rails conventions, quality)
-
-**Meta**
-- **writing-skills** - Create new skills following best practices (includes testing methodology)
-- **using-superpowers** - Introduction to the skills system
-
-## Philosophy
-
-- **Test-Driven Development** - Write tests first, always
-- **Systematic over ad-hoc** - Process over guessing
-- **Complexity reduction** - Simplicity as primary goal
-- **Evidence over claims** - Verify before declaring success
-
-Read more: [Superpowers for Claude Code](https://blog.fsck.com/2025/10/09/superpowers/)
-
-## Contributing
-
-Skills live directly in this repository. To contribute:
-
-1. Fork the repository
-2. Create a branch for your skill
-3. Follow the `writing-skills` skill for creating and testing new skills
-4. Submit a PR
-
-See `skills/writing-skills/SKILL.md` for the complete guide.
-
-## Updating
-
-Skills update automatically when you update the plugin:
-
-```bash
-/plugin update superpowers
-```
+Convention skills **prescribe the modern path** for new work but **acknowledge what exists**. The rails-reviewer agent will not flag convention violations in existing code that wasn't modified in the current changeset.
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT License — see LICENSE file for details.
 
-## Support
+## Credits
 
-- **Issues**: https://github.com/obra/superpowers/issues
-- **Marketplace**: https://github.com/obra/superpowers-marketplace
+Forked from [Superpowers](https://github.com/obra/superpowers) by Jesse Vincent.

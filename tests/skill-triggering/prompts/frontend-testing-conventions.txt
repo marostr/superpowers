@@ -1,0 +1,1 @@
+I need to write tests for the GoalCard component that verify it renders correctly, handles user interactions, and properly mocks the API responses.

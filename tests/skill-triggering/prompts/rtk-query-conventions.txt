@@ -1,0 +1,1 @@
+I need to create RTK Query endpoints for the goals API - fetching a list, creating, updating, and deleting goals with proper cache invalidation.

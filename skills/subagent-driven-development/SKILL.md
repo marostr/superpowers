@@ -65,7 +65,7 @@ digraph process {
     "Read plan, extract all tasks with full text, note context, create TodoWrite" [shape=box];
     "More tasks remain?" [shape=diamond];
     "Dispatch final code reviewer subagent for entire implementation" [shape=box];
-    "Use superpowers:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
+    "Use superpowers-trainual:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
 
     "Read plan, extract all tasks with full text, note context, create TodoWrite" -> "Dispatch implementer subagent (./implementer-prompt.md)";
     "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer subagent asks questions?";
@@ -90,7 +90,7 @@ digraph process {
     "Mark task complete in TodoWrite" -> "More tasks remain?";
     "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
     "More tasks remain?" -> "Dispatch final code reviewer subagent for entire implementation" [label="no"];
-    "Dispatch final code reviewer subagent for entire implementation" -> "Use superpowers:finishing-a-development-branch";
+    "Dispatch final code reviewer subagent for entire implementation" -> "Use superpowers-trainual:finishing-a-development-branch";
 }
 ```
 
@@ -143,18 +143,27 @@ Implementer subagents report one of four statuses. Handle each appropriately:
 
 1. Include this in EVERY implementer prompt:
 ```
-Load ALL Rails convention skills before implementing:
-superpowers:rails-controller-conventions
-superpowers:rails-model-conventions
-superpowers:rails-view-conventions
-superpowers:rails-policy-conventions
-superpowers:rails-job-conventions
-superpowers:rails-migration-conventions
-superpowers:rails-stimulus-conventions
-superpowers:rails-testing-conventions
+Load ALL convention skills before implementing:
+superpowers-trainual:rails-controller-conventions
+superpowers-trainual:rails-model-conventions
+superpowers-trainual:rails-view-conventions
+superpowers-trainual:rails-policy-conventions
+superpowers-trainual:rails-job-conventions
+superpowers-trainual:rails-migration-conventions
+superpowers-trainual:rails-stimulus-conventions
+superpowers-trainual:rails-testing-conventions
+superpowers-trainual:rails-interactor-conventions
+superpowers-trainual:jsonapi-conventions
+superpowers-trainual:rails-engine-conventions
+superpowers-trainual:query-object-conventions
+superpowers-trainual:typescript-conventions
+superpowers-trainual:rtk-query-conventions
+superpowers-trainual:dto-transformer-conventions
+superpowers-trainual:react-component-conventions
+superpowers-trainual:frontend-testing-conventions
 ```
 
-2. Add Rails conventions review after spec compliance:
+2. Add conventions review after spec compliance:
 ```
 Review order for Rails:
 1. Spec compliance (./spec-reviewer-prompt.md)
@@ -314,13 +323,13 @@ Done!
 ## Integration
 
 **Required workflow skills:**
-- **superpowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
-- **superpowers:writing-plans** - Creates the plan this skill executes
-- **superpowers:requesting-code-review** - Code review template for reviewer subagents
-- **superpowers:finishing-a-development-branch** - Complete development after all tasks
+- **superpowers-trainual:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
+- **superpowers-trainual:writing-plans** - Creates the plan this skill executes
+- **superpowers-trainual:requesting-code-review** - Code review template for reviewer subagents
+- **superpowers-trainual:finishing-a-development-branch** - Complete development after all tasks
 
 **Subagents should use:**
-- **superpowers:test-driven-development** - Subagents follow TDD for each task
+- **superpowers-trainual:test-driven-development** - Subagents follow TDD for each task
 
 **Alternative workflow:**
-- **superpowers:executing-plans** - Use for parallel session instead of same-session execution
+- **superpowers-trainual:executing-plans** - Use for parallel session instead of same-session execution

@@ -32,14 +32,23 @@ digraph rails_check {
 **Before writing ANY task code for a Rails project, you MUST load ALL convention skills:**
 
 ```
-superpowers:rails-controller-conventions
-superpowers:rails-model-conventions
-superpowers:rails-view-conventions
-superpowers:rails-policy-conventions
-superpowers:rails-job-conventions
-superpowers:rails-migration-conventions
-superpowers:rails-stimulus-conventions
-superpowers:rails-testing-conventions
+superpowers-trainual:rails-controller-conventions
+superpowers-trainual:rails-model-conventions
+superpowers-trainual:rails-view-conventions
+superpowers-trainual:rails-policy-conventions
+superpowers-trainual:rails-job-conventions
+superpowers-trainual:rails-migration-conventions
+superpowers-trainual:rails-stimulus-conventions
+superpowers-trainual:rails-testing-conventions
+superpowers-trainual:rails-interactor-conventions
+superpowers-trainual:jsonapi-conventions
+superpowers-trainual:rails-engine-conventions
+superpowers-trainual:query-object-conventions
+superpowers-trainual:typescript-conventions
+superpowers-trainual:rtk-query-conventions
+superpowers-trainual:dto-transformer-conventions
+superpowers-trainual:react-component-conventions
+superpowers-trainual:frontend-testing-conventions
 ```
 
 The executor will load these skills and apply them. Plans reference conventions by name, not by duplicating their content.
@@ -86,7 +95,7 @@ This structure informs the task decomposition. Each task should produce self-con
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or superpowers:executing-plans to implement this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED: Use superpowers-trainual:subagent-driven-development (if subagents available) or superpowers-trainual:executing-plans to implement this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -176,10 +185,10 @@ After saving the plan:
 **Execution path depends on harness capabilities:**
 
 **If harness has subagents (Claude Code, etc.):**
-- **REQUIRED:** Use superpowers:subagent-driven-development
+- **REQUIRED:** Use superpowers-trainual:subagent-driven-development
 - Do NOT offer a choice - subagent-driven is the standard approach
 - Fresh subagent per task + two-stage review
 
 **If harness does NOT have subagents:**
-- Execute plan in current session using superpowers:executing-plans
+- Execute plan in current session using superpowers-trainual:executing-plans
 - Batch execution with checkpoints for review

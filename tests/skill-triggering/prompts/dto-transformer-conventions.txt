@@ -1,0 +1,1 @@
+The API returns goal data in JSON:API format with snake_case keys. I need to define the DTO types for the API response and the camelCase entity types for the frontend components.

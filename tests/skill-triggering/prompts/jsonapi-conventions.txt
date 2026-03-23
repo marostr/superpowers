@@ -1,0 +1,1 @@
+I need to create a new serializer for the meeting resource that includes relationships to attendees, agenda items, and the meeting owner with proper meta permissions.

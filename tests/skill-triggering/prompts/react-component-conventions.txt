@@ -1,0 +1,1 @@
+I need to build a GoalCard component that displays goal information, handles edit actions, and integrates with our Redux store for state management.

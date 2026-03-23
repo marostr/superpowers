@@ -19,15 +19,24 @@ Task tool (general-purpose):
     ## Required Skills (Rails projects)
 
     [If Rails project, controller adds this section:]
-    Load ALL Rails convention skills BEFORE implementing:
-    superpowers:rails-controller-conventions
-    superpowers:rails-model-conventions
-    superpowers:rails-view-conventions
-    superpowers:rails-policy-conventions
-    superpowers:rails-job-conventions
-    superpowers:rails-migration-conventions
-    superpowers:rails-stimulus-conventions
-    superpowers:rails-testing-conventions
+    Load ALL convention skills BEFORE implementing:
+    superpowers-trainual:rails-controller-conventions
+    superpowers-trainual:rails-model-conventions
+    superpowers-trainual:rails-view-conventions
+    superpowers-trainual:rails-policy-conventions
+    superpowers-trainual:rails-job-conventions
+    superpowers-trainual:rails-migration-conventions
+    superpowers-trainual:rails-stimulus-conventions
+    superpowers-trainual:rails-testing-conventions
+    superpowers-trainual:rails-interactor-conventions
+    superpowers-trainual:jsonapi-conventions
+    superpowers-trainual:rails-engine-conventions
+    superpowers-trainual:query-object-conventions
+    superpowers-trainual:typescript-conventions
+    superpowers-trainual:rtk-query-conventions
+    superpowers-trainual:dto-transformer-conventions
+    superpowers-trainual:react-component-conventions
+    superpowers-trainual:frontend-testing-conventions
 
     ## Before You Begin
 

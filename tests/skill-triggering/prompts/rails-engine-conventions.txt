@@ -1,0 +1,1 @@
+We're building a new isolated Rails engine called "analytics" that needs its own models, controllers, and serializers with proper namespace isolation and feature gating.

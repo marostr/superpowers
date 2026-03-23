@@ -37,7 +37,7 @@ Check if Rails project (look for Gemfile with rails, app/controllers, etc.)
 If Rails, dispatch rails reviewer using agent at `agents/rails-reviewer.md`:
 
 ```
-Task tool (superpowers:rails-reviewer):
+Task tool (superpowers-trainual:rails-reviewer):
   Use agent at agents/rails-reviewer.md
   FILES_CHANGED: [list]
   BASE_SHA: [sha]
@@ -51,7 +51,7 @@ Task tool (superpowers:rails-reviewer):
 Dispatch code quality reviewer using agent at `agents/code-reviewer.md`:
 
 ```
-Task tool (superpowers:code-reviewer):
+Task tool (superpowers-trainual:code-reviewer):
   Use agent at agents/code-reviewer.md
   FILES_CHANGED: [list]
   BASE_SHA: [sha]

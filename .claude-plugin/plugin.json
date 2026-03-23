@@ -1,13 +1,17 @@
 {
-  "name": "superpowers",
-  "description": "Core skills library for Claude Code: TDD, debugging, collaboration patterns, and proven techniques",
-  "version": "5.1.0-rails",
+  "name": "superpowers-trainual",
+  "description": "Trainual Rails conventions and workflow skills: JSON:API, ActiveInteractor, engine patterns, TDD, and collaboration",
+  "version": "1.0.0",
   "author": {
-    "name": "Jesse Vincent",
-    "email": "jesse@fsck.com"
+    "name": "Trainual",
+    "url": "https://github.com/trainual"
   },
-  "homepage": "https://github.com/obra/superpowers",
-  "repository": "https://github.com/obra/superpowers",
+  "homepage": "https://github.com/trainual/superpowers-rails",
+  "repository": "https://github.com/trainual/superpowers-rails",
   "license": "MIT",
-  "keywords": ["skills", "tdd", "debugging", "collaboration", "best-practices", "workflows"]
+  "keywords": ["skills", "tdd", "debugging", "rails", "jsonapi", "interactors", "conventions", "workflows"],
+  "skills": "./skills/",
+  "agents": "./agents/",
+  "commands": "./commands/",
+  "hooks": "./hooks/hooks.json"
 }

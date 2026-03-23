@@ -1,0 +1,1 @@
+I need to add a new JSON:API endpoint for managing scorecards. The controller should support index, show, create, and update actions with proper filtering and pagination.

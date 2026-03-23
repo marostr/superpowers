@@ -1,0 +1,1 @@
+I need to add TypeScript type definitions for the new goal resource coming from our JSON:API backend, including the response shape and frontend entity types.

@@ -14,6 +14,16 @@ SKILLS=(
     "dispatching-parallel-agents"
     "executing-plans"
     "requesting-code-review"
+    "rails-controller-conventions"
+    "rails-interactor-conventions"
+    "jsonapi-conventions"
+    "rails-engine-conventions"
+    "query-object-conventions"
+    "typescript-conventions"
+    "rtk-query-conventions"
+    "dto-transformer-conventions"
+    "react-component-conventions"
+    "frontend-testing-conventions"
 )
 
 echo "=== Running Skill Triggering Tests ==="

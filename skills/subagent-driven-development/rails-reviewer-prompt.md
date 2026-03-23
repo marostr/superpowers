@@ -7,7 +7,7 @@ Use this template when dispatching a Rails conventions reviewer subagent.
 **Only dispatch for Rails projects, after spec compliance review passes.**
 
 ```
-Task tool (superpowers:rails-reviewer):
+Task tool (superpowers-trainual:rails-reviewer):
   Use agent at agents/rails-reviewer.md
 
   FILES_CHANGED: [list of files from this task]

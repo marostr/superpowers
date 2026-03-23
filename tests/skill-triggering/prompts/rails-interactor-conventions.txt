@@ -1,0 +1,1 @@
+I need to create a new business operation that creates a meeting with an agenda, assigns attendees, and sends notifications. This is a multi-step process that needs to be atomic.
