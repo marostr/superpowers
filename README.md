@@ -17,17 +17,16 @@ The plugin injects convention awareness into every coding session:
 
 ## Installation
 
-### Claude Code
+### Claude Code (from GitHub)
 
 ```bash
-/plugin install superpowers-trainual@trainual
+/plugin install trainual/superpowers-rails
 ```
 
-Or register the marketplace and install:
+### Claude Code (from local directory)
 
 ```bash
-/plugin marketplace add trainual/superpowers-rails
-/plugin install superpowers-trainual@superpowers-trainual
+/plugin install /path/to/superpowers-trainual
 ```
 
 ## Convention Skills
