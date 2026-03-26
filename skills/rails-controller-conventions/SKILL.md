@@ -1,6 +1,6 @@
 ---
 name: rails-controller-conventions
-description: Use when creating or modifying Rails controllers, adding actions, setting up authorization, configuring routes, or handling Turbo responses
+description: Use when creating or modifying Rails controllers, adding actions, setting up authorization, configuring routes, modeling state changes as resources, or handling Turbo responses
 ---
 
 # Rails Controller Conventions
@@ -51,6 +51,34 @@ end
 ```
 
 See `rails-model-conventions` for the full pattern and model-side implementation.
+
+## State Record Controllers
+
+State changes are CRUD on a nested resource, not custom actions. See `rails-model-conventions` for the concern side.
+
+```ruby
+resources :cards do
+  resource :closure, only: %i[create destroy]
+end
+```
+
+```ruby
+class ClosuresController < ApplicationController
+  def create
+    authorize @card, :close?
+    @card.close
+    # respond with turbo_stream
+  end
+
+  def destroy
+    authorize @card, :reopen?
+    @card.reopen
+    # respond with turbo_stream
+  end
+end
+```
+
+Authorize against the parent record using intent-named policy methods. No state logic in the controller.
 
 ## Quick Reference
 
